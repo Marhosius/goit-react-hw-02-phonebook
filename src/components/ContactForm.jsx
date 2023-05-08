@@ -1,5 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
+import { nanoid } from "nanoid";
+import css from "./phonebook.module.css";
 
 export class ContactForm extends Component {
     state = {
@@ -12,11 +14,21 @@ export class ContactForm extends Component {
         this.setState({ [name]: value })
     }
 
+    onFormSubmit = (event) => {
+        event.preventDefault();
+        this.props.onAddNewContact({ id: (nanoid(6)), name: this.state.name, number: this.state.number })
+        this.setState({
+            name: "",
+            number: ""
+        })
+    }
+
     render() {
         return (
-            <form className="">
-                <label htmlFor="id-name" className=""></label>
+            <form onSubmit={this.onFormSubmit} className={css.phonebookForm}>
+                <label htmlFor="id-name" className={css.phonebookFormLabel}>Name</label>
                 <input
+                    className={css.phonebookFormInput}
                     onChange={this.onInputChange}
                     id="id-name"
                     value={this.state.name}
@@ -26,8 +38,9 @@ export class ContactForm extends Component {
                     title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
                     required
                 />
-                <label htmlFor="id-number" className=""></label>
+                <label htmlFor="id-number" className={css.phonebookFormLabel}>Number</label>
                 <input
+                    className={css.phonebookFormInput}
                     onChange={this.onInputChange}
                     id="id-number"
                     value={this.state.number}
@@ -37,13 +50,14 @@ export class ContactForm extends Component {
                     title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
                     required
                 />
-                <input type="submit" title="Submit"></input>
+                <input className={css.phonebookFormSubmit} type="submit" title="Submit"></input>
             </form>
         )
     }
 }
 
 ContactForm.propTypes = {
+    onAddNewContact: PropTypes.func.isRequired
 }
 
 export default ContactForm
